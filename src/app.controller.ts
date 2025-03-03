@@ -18,14 +18,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import {
-  ProfilesValidationDTO,
-  ValidateProfileDTO,
-  ValidateRowDTO,
-} from './dto/validate.dto';
+import { ProfilesValidationDTO, ValidateProfileDTO } from './dto/validate.dto';
 import { FileUploadDTO } from './dto/file.dto';
 import * as multer from 'multer';
-import { LineDTO } from './dto/line.dto';
 
 @ApiTags('validate')
 @Controller('validate')
@@ -51,14 +46,4 @@ export class AppController {
 
     res.status(HttpStatus.OK).json(report);
   }
-
-  // @Post('line')
-  // @ApiBody({
-  //   type: LineDTO,
-  // })
-  // @ApiResponse({ status: HttpStatus.OK, type: ValidateRowDTO })
-  // async validateLine(@Body() { line }: LineDTO, @Res() res: Response) {
-  //   const report: ValidateRowDTO = await this.appService.validateLine(line);
-  //   res.status(HttpStatus.OK).json(report);
-  // }
 }
