@@ -409,6 +409,11 @@
     "@eslint/core" "^0.12.0"
     levn "^0.4.1"
 
+"@etalab/decoupage-administratif@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@etalab/decoupage-administratif/-/decoupage-administratif-5.0.0.tgz#5bbf084118b7545abbadfaf2cde214a6bdc78443"
+  integrity sha512-Ui/5A4jqvhQ4EsikNyuvJN3lIgRHBv9N1tX7B+n08EMRqlHjzm0e+Z7pOlDHJ2EQU9XnA5xcl4lqlBpznfp07w==
+
 "@etalab/project-legal@^0.6.0":
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@etalab/project-legal/-/project-legal-0.6.0.tgz#9932f023b85e91578fb3249e885677cb18ec072d"

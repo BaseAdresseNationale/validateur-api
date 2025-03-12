@@ -116,9 +116,11 @@ function validateRow(
   ) {
     const codeCommune = row.parsedValues.commune_insee;
     const codeAncienneCommune = row.parsedValues.commune_deleguee_insee;
-    const communeActuelle = getCommuneActuelle(codeAncienneCommune as string);
+    const codeCommuneActuelle = getCommuneActuelle(
+      codeAncienneCommune as string,
+    );
 
-    if (communeActuelle && communeActuelle.code !== codeCommune) {
+    if (codeCommuneActuelle && codeCommuneActuelle !== codeCommune) {
       addError('chef_lieu_invalide');
     }
   }

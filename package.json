@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@ban-team/shared-data": "^1.4.1",
+    "@etalab/decoupage-administratif": "^5.0.0",
     "@etalab/project-legal": "^0.6.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
