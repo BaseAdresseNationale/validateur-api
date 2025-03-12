@@ -21,7 +21,6 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.parseOk).toBe(true);
 
     expect(report.profilesValidation['1.4'].isValid).toBe(true);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Valid file 1.4', async () => {
@@ -32,7 +31,6 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(true);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Valid file 1.4 with relaxFieldsDetection', async () => {
@@ -44,33 +42,30 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Valid file 1.4 with profile relax', async () => {
     const buffer = await readAsBuffer('1.4-valid-relax.csv');
     const report = (await validate(buffer, {
-      profile: '1.4-relax',
+      profile: '1.4',
       relaxFieldsDetection: true,
     })) as ValidateProfileType;
 
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Error file 1.4 without relaxFieldsDetection', async () => {
     const buffer = await readAsBuffer('1.4-valid-relax.csv');
     const report = (await validate(buffer, {
-      profile: '1.4-relax',
+      profile: '1.4',
       relaxFieldsDetection: false,
     })) as ValidateProfileType;
 
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Error file 1.4 with profile 1.4', async () => {
@@ -82,7 +77,6 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Error bad id ban adresses (file 1.4)', async () => {
@@ -94,13 +88,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'id_ban_adresse.type_invalide',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Error bad id ban commune (file 1.4)', async () => {
@@ -112,13 +105,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'id_ban_commune.type_invalide',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Error bad id ban toponyme a (file 1.4)', async () => {
@@ -130,13 +122,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'id_ban_toponyme.type_invalide',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Good incoherent dependance ban id (file 1.4)', async () => {
@@ -148,7 +139,6 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
   });
 
   test('Error incoherent dependance ban id (file 1.4)', async () => {
@@ -160,31 +150,29 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
-      (e) => e.code === 'row.incoherence_id_ban',
+      (e) => e.code === 'row.lack_of_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Warning adresses_required_id_ban (file 1.4) with profile relax', async () => {
     const buffer = await readAsBuffer('1.4-without-ban-adresse.csv');
     const report = (await validate(buffer, {
-      profile: '1.4-relax',
+      profile: '1.4',
     })) as ValidateProfileType;
 
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
-      (e) => e.code === 'row.adresses_required_id_ban',
+      (e) => e.code === 'row.lack_of_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('W');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('ERROR adresses_required_id_ban (file 1.4)', async () => {
@@ -196,13 +184,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
-      (e) => e.code === 'row.adresses_required_id_ban',
+      (e) => e.code === 'row.lack_of_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Valid file 1.4 with ids ban empty', async () => {
@@ -212,7 +199,6 @@ describe('VALIDATE 1.4 TEST', () => {
     })) as ValidateProfileType;
 
     expect(report.profilesValidation['1.4'].isValid).toBe(true);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.level === ErrorLevelEnum.ERROR,
@@ -223,19 +209,18 @@ describe('VALIDATE 1.4 TEST', () => {
   test('Warning rows.every_line_required_id_ban (file 1.4) with profile relax', async () => {
     const buffer = await readAsBuffer('1.4-no-ids-ban-every.csv');
     const report = (await validate(buffer, {
-      profile: '1.4-relax',
+      profile: '1.4',
     })) as ValidateProfileType;
 
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'rows.every_line_required_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('W');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Warning rows.every_line_required_id_ban (file 1.4)', async () => {
@@ -247,13 +232,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'rows.every_line_required_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Read uid_adresse', async () => {
@@ -264,7 +248,6 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(true);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
     expect(report.rows[0].additionalValues.uid_adresse.idBanCommune).toBe(
       '0246e48c-f33d-433a-8984-034219be842e',
     );
@@ -285,13 +268,12 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'uid_adresse.type_invalide',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 
   test('Error uid_adresse incoherence_id_ban', async () => {
@@ -303,12 +285,11 @@ describe('VALIDATE 1.4 TEST', () => {
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
-    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
 
     const error = report.profilErrors.filter(
-      (e) => e.code === 'row.incoherence_id_ban',
+      (e) => e.code === 'row.lack_of_id_ban',
     );
     expect(error.length).toBe(1);
-    expect(error[0].level).toBe('E');
+    expect(error[0].level).toBe(ErrorLevelEnum.ERROR);
   });
 });
