@@ -7,14 +7,14 @@ describe('VALIDATE ROWS', () => {
       {
         parsedValues: {
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
           lieudit_complement_nom: 'paradis',
         },
       },
       {
         parsedValues: {
           voie_nom: 'paradis',
-          numero: '99999',
+          numero: 99999,
         },
       },
     ];
@@ -42,7 +42,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '',
           id_ban_adresse: '',
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
         },
       },
       {
@@ -51,7 +51,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '',
           id_ban_adresse: '',
           voie_nom: 'rue du Colombier',
-          numero: '2',
+          numero: 2,
         },
       },
     ];
@@ -70,7 +70,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '0246e48c-f33d-433a-8984-034219be842e',
           id_ban_adresse: '0246e48c-f33d-433a-8984-034219be842e',
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
         },
       },
       {
@@ -79,7 +79,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '0246e48c-f33d-433a-8984-034219be842e',
           id_ban_adresse: '',
           voie_nom: 'rue du Colombier',
-          numero: '99999',
+          numero: 99999,
         },
       },
     ];
@@ -98,7 +98,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '0246e48c-f33d-433a-8984-034219be842e',
           id_ban_adresse: '0246e48c-f33d-433a-8984-034219be842e',
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
         },
       },
       {
@@ -107,7 +107,7 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '8a3bab10-f329-4ce3-9c7d-280d91a8053a',
           id_ban_adresse: '',
           voie_nom: 'rue du Colombier',
-          numero: '99999',
+          numero: 99999,
         },
       },
     ];
@@ -126,13 +126,13 @@ describe('VALIDATE ROWS', () => {
           id_ban_toponyme: '0246e48c-f33d-433a-8984-034219be842e',
           id_ban_adresse: '0246e48c-f33d-433a-8984-034219be842e',
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
         },
       },
       {
         parsedValues: {
           voie_nom: 'rue du Colombier',
-          numero: '2',
+          numero: 2,
         },
       },
     ];
@@ -155,13 +155,13 @@ describe('VALIDATE ROWS', () => {
         },
         parsedValues: {
           voie_nom: 'rue du Colombier',
-          numero: '1',
+          numero: 1,
         },
       },
       {
         parsedValues: {
           voie_nom: 'rue du Colombier',
-          numero: '2',
+          numero: 2,
         },
       },
     ];

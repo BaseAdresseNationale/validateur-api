@@ -16,6 +16,7 @@ function validateUseBanIds(
 ) {
   const districtIDs = new Set();
   let balAdresseUseBanId = 0;
+
   for (const row of rows) {
     const idBanCommune =
       row.parsedValues.id_ban_commune ||
@@ -31,7 +32,7 @@ function validateUseBanIds(
     if (
       idBanCommune &&
       idBanToponyme &&
-      ((!idBanAdresse && numero === IS_TOPO_NB) || idBanAdresse)
+      (idBanAdresse || (!idBanAdresse && numero === Number(IS_TOPO_NB)))
     ) {
       balAdresseUseBanId++;
       districtIDs.add(idBanCommune);
