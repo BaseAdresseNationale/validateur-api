@@ -14,14 +14,23 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ban-team/validateur-bal": "^3.0.6",
+    "@ban-team/shared-data": "^1.4.1",
+    "@etalab/project-legal": "^0.6.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.0.6",
+    "bluebird": "^3.7.2",
+    "chardet": "^2.1.0",
+    "date-fns": "^4.1.0",
+    "file-type": "^12.4.2",
+    "iconv-lite": "^0.6.3",
+    "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
+    "papaparse": "^5.5.2",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

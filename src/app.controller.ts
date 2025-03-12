@@ -8,7 +8,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { PrevalidateType, ValidateProfile } from '@ban-team/validateur-bal';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import {
@@ -21,6 +20,7 @@ import {
 import { ProfilesValidationDTO, ValidateProfileDTO } from './dto/validate.dto';
 import { FileUploadDTO } from './dto/file.dto';
 import * as multer from 'multer';
+import { ParseFileType, PrevalidateType, ValidateProfileType } from './lib';
 
 @ApiTags('validate')
 @Controller('validate')
@@ -41,7 +41,7 @@ export class AppController {
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
-    const report: PrevalidateType | ValidateProfile =
+    const report: ParseFileType | PrevalidateType | ValidateProfileType =
       await this.appService.validateFile(fileBuffer, profile || '1.3-relax');
 
     res.status(HttpStatus.OK).json(report);
