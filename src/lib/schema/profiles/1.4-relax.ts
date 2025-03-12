@@ -20,7 +20,6 @@ const warnings: string[] = [
   'rows.every_line_required_id_ban',
   'rows.multi_id_ban_commune',
   'uid_adresse.type_invalide',
-  'uid_adresse.incoherence_ids_ban',
 ];
 
 const infos = ['cle_interop.voie_non_renseignee'];

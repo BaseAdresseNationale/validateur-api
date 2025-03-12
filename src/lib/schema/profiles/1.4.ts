@@ -12,7 +12,6 @@ const errors: string[] = [
   'rows.every_line_required_id_ban',
   'rows.multi_id_ban_commune',
   'uid_adresse.type_invalide',
-  'uid_adresse.incoherence_ids_ban',
 ];
 
 const warnings: string[] = [

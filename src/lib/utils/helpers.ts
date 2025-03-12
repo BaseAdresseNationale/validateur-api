@@ -125,7 +125,7 @@ export function getLabel(code: string) {
   const { schemaName, locale, fieldError } = parseErrorCode(code);
   const codeToUser = locale ? `${schemaName}.${fieldError}` : code;
 
-  // Si le code corrspond a un errorLabel on le retourne
+  // Si le code correspond a un errorLabel on le retourne
   if (codeToUser in errorLabels) {
     return errorLabels[codeToUser] + (locale ? ` [${locale}]` : '');
   }
@@ -137,7 +137,10 @@ export function getLabel(code: string) {
 
   // On le retourne si c'est le cas
   if (endsWithCandidate) {
-    return endsWithErrorLabels[endsWithCandidate](codeToUser);
+    return (
+      endsWithErrorLabels[endsWithCandidate](codeToUser) +
+      (locale ? ` [${locale}]` : '')
+    );
   }
 
   // On retourne si c'est un champ qui manque
