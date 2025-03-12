@@ -1,5 +1,7 @@
 import { ParseError, ParseResult } from 'papaparse';
 
+export const IS_TOPO_NB = '99999';
+
 export type ParseReturn = ParseResult<Record<string, string>> & {
   encoding: string;
 };

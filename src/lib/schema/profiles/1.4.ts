@@ -9,7 +9,8 @@ const errors: string[] = [
   'id_ban_adresse.type_invalide',
   'row.incoherence_id_ban',
   'row.adresses_required_id_ban',
-  'rows.ids_required_every',
+  'rows.every_line_required_id_ban',
+  'rows.multi_id_ban_commune',
 ];
 
 const warnings: string[] = [

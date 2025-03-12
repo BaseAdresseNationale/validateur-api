@@ -124,7 +124,8 @@ const errorLabels: Record<string, string> = {
     'id_ban_adresses est requis les ids ban et le numero sont renseigné',
   // rows
   'rows.empty': 'Aucune ligne détecté',
-  'rows.ids_required_every':
+  'rows.multi_id_ban_commune': 'Il ne pas y avoir differents id_ban_commune',
+  'rows.every_line_required_id_ban':
     'Les ids ban sont requis pour toutes les lignes si ils sont utlisés',
 };
 
