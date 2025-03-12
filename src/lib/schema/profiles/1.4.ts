@@ -11,6 +11,8 @@ const errors: string[] = [
   'row.adresses_required_id_ban',
   'rows.every_line_required_id_ban',
   'rows.multi_id_ban_commune',
+  'uid_adresse.type_invalide',
+  'uid_adresse.incoherence_ids_ban',
 ];
 
 const warnings: string[] = [
@@ -19,8 +21,6 @@ const warnings: string[] = [
   'field.id_ban_commune.missing',
   'field.id_ban_toponyme.missing',
   'field.id_ban_adresse.missing',
-  'uid_adresse.type_invalide',
-  'uid_adresse.incoherence_ids_ban',
 ];
 
 const infos = ['cle_interop.voie_non_renseignee'];

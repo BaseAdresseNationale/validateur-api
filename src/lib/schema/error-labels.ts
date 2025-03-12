@@ -25,7 +25,7 @@ const errorLabels: Record<string, string> = {
 
   // uid_adresse
   'uid_adresse.type_invalide': 'La valeur de uid_adresse n’est pas valide',
-  'uid_adresse.incoherence_ids_ban':
+  'uid_adresse.incoherence_id_ban':
     'Les ids ban renseignés ne sont pas cohérents',
 
   // id_ban_commune

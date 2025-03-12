@@ -155,22 +155,6 @@ const fields: Record<string, FieldsSchema> = {
         return undefined;
       }
 
-      if (!idBanCommune || !idBanToponyme) {
-        addError('incoherence_ids_ban');
-      }
-
-      // LES IDS id_ban_commune / id_ban_toponyme / id_ban_adresse NE PEUVENT PAS ËTRE IDENTIQUES
-      if (
-        (idBanCommune && idBanToponyme && idBanCommune === idBanToponyme) ||
-        (idBanCommune && idBanAdresse && idBanCommune === idBanAdresse) ||
-        (idBanAdresse && idBanToponyme && idBanToponyme === idBanAdresse)
-      ) {
-        addError('incoherence_ids_ban');
-      }
-
-      // SI IL Y A UN id_ban_toponyme, IL Y A UN id_ban_commune
-      // SI IL Y A UN id_ban_adresse, IL Y A UN id_ban_toponyme ET DONC IL Y A IL Y A UN id_ban_commune
-
       setAdditionnalValues({
         idBanCommune,
         idBanToponyme,

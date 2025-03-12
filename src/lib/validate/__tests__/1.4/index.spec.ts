@@ -276,4 +276,21 @@ describe('VALIDATE 1.4 TEST', () => {
       '3c87abe4-887b-46ee-9192-5c1b35a06625',
     );
   });
+
+  test('Error uid_adresse type invalide', async () => {
+    const buffer = await readAsBuffer('1.3-invalid-uid_adresse.csv');
+    const report = (await validate(buffer, {
+      profile: '1.4',
+    })) as ValidateProfileType;
+    expect(report.encoding).toBe('utf-8');
+    expect(report.parseOk).toBe(true);
+    expect(report.profilesValidation['1.4'].isValid).toBe(false);
+    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
+
+    const error = report.profilErrors.filter(
+      (e) => e.code === 'uid_adresse.type_invalide',
+    );
+    expect(error.length).toBe(1);
+    expect(error[0].level).toBe('E');
+  });
 });
