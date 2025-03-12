@@ -8,6 +8,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { omit } from 'lodash';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import {
@@ -37,13 +38,16 @@ export class AppController {
   @ApiResponse({ status: HttpStatus.OK, type: ValidateProfileDTO })
   async validateFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() { profile }: FileUploadDTO,
+    @Body() { profile, withRowsParsed }: FileUploadDTO,
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
     const report: ParseFileType | PrevalidateType | ValidateProfileType =
       await this.appService.validateFile(fileBuffer, profile || '1.3-relax');
+    console.log(withRowsParsed, typeof withRowsParsed);
 
-    res.status(HttpStatus.OK).json(report);
+    res
+      .status(HttpStatus.OK)
+      .json(withRowsParsed === 'true' ? report : omit(report, 'rows'));
   }
 }

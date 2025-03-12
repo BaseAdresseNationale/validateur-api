@@ -128,13 +128,11 @@ function validateBanIds(
   // Si au moins un des ID est présent, cela signifie que l'adresse BAL utilise BanID
   if (idBanCommune || idBanToponyme || idBanAdresse) {
     if (!idBanCommune) {
-      addError('incoherence_id_ban');
-    }
-    if (!idBanToponyme) {
-      addError('incoherence_id_ban');
-    }
-    if (!idBanAdresse && row.parsedValues.numero !== 99_999) {
-      addError('adresses_required_id_ban');
+      addError('lack_of_id_ban');
+    } else if (!idBanToponyme) {
+      addError('lack_of_id_ban');
+    } else if (!idBanAdresse && row.parsedValues.numero !== 99_999) {
+      addError('lack_of_id_ban');
     }
   }
 }
