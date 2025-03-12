@@ -12,17 +12,17 @@ function stripBom(str: string): string {
   return str.codePointAt(0) === 0xfe_ff ? str.slice(1) : str;
 }
 
-async function decodeBuffer(buffer: Buffer) {
+function decodeBuffer(buffer: Buffer) {
   const encoding: string = detectBufferEncoding(buffer);
   const decodedString: string = stripBom(iconv.decode(buffer, encoding));
   return { encoding, decodedString };
 }
 
 export async function parse(buffer: Buffer): Promise<ParseReturn> {
-  const { encoding, decodedString } = await decodeBuffer(buffer);
+  const { encoding, decodedString } = decodeBuffer(buffer);
   const { data, errors, meta }: ParseResult<Record<string, string>> =
     await parseCsv(decodedString, {
-      transformHeader: (h) => h.toLowerCase().trim(),
+      transformHeader: (h: string) => h.toLowerCase().trim(),
     });
   return { data, errors, meta, encoding };
 }

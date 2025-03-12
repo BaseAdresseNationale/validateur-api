@@ -1,5 +1,3 @@
-/* eslint camelcase: off */
-
 import { join } from 'path';
 import fs from 'fs';
 import { promisify } from 'util';
@@ -23,7 +21,7 @@ describe('VALIDATE TEST', () => {
 
   it('No validate a file with aliases / relaxFieldsDetection true', async () => {
     const buffer = await readAsBuffer('aliases.csv');
-    const { fields, notFoundFields } = (await validate(buffer, {
+    const { notFoundFields } = (await validate(buffer, {
       relaxFieldsDetection: true,
     })) as ValidateProfileType;
 

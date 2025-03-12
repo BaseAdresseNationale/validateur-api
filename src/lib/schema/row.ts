@@ -32,7 +32,7 @@ function validatePositionType(
   }
 }
 
-function harmlessProj(coordinates) {
+function harmlessProj(coordinates): any {
   try {
     return proj(coordinates);
   } catch {

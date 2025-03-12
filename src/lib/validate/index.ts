@@ -15,6 +15,7 @@ import {
   ProfilesValidationType,
   ValidateFileType,
   ValidateProfileType,
+  ErrorLevelEnum,
 } from './validate.type';
 
 export async function prevalidate(
@@ -74,7 +75,7 @@ export async function prevalidate(
     (profile) => {
       const { code, name } = profile;
       const isValid = ![...uniqueErrors].some(
-        (e) => getErrorLevel(profile.code, e) === 'E',
+        (e) => getErrorLevel(profile.code, e) === ErrorLevelEnum.ERROR,
       );
       return { code, name, isValid };
     },

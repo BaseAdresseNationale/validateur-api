@@ -3,7 +3,6 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { validate } from '../../index';
 import { ErrorLevelEnum, ValidateProfileType } from '../../validate.type';
-import { getErrorLevel, getLabel } from '../../../utils/helpers';
 
 const readFile = promisify(fs.readFile);
 

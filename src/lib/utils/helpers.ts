@@ -4,7 +4,7 @@ import profiles from '../schema/profiles';
 import errorLabels from '../schema/error-labels';
 import Schema from '../schema/index';
 import { ProfileType } from '../schema/profiles/profile.type';
-import { ErrorLevelEnum } from './error-level.enum';
+import { ErrorLevelEnum } from '../validate/validate.type';
 
 // On fait une liste des langues régional que l'on peut utiliser
 export const allowedRegionalLangs: string[] = languesRegionales.map(

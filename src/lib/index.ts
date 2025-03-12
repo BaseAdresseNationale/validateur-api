@@ -3,7 +3,6 @@ import { validateProfile } from './validate/profiles';
 import { readValue } from './validate/rows';
 import { getErrorLevel, getLabel } from './utils/helpers';
 import profiles from './schema/profiles';
-import { ErrorLevelEnum } from './utils/error-level.enum';
 
 export {
   validate,
@@ -13,10 +12,10 @@ export {
   readValue,
   getErrorLevel,
   profiles,
-  ErrorLevelEnum,
 };
 
-export type {
+export {
+  ErrorLevelEnum,
   PrevalidateType,
   ValidateProfileType,
   FieldType,

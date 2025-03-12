@@ -26,7 +26,7 @@ export type FieldsSchema = {
   formats?: string[];
   allowRegionalLang?: boolean;
   parse?: (
-    value: any,
+    value: string,
     {
       addError,
       setAdditionnalValues,
@@ -49,7 +49,8 @@ function includesInvalidChar(str: string): boolean {
   return str.includes('�');
 }
 
-function getNormalizedEnumValue(value) {
+function getNormalizedEnumValue(value: string): string {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return deburr(value.normalize())
     .replace(/\W+/g, ' ')
     .trim()
@@ -57,7 +58,7 @@ function getNormalizedEnumValue(value) {
     .normalize();
 }
 
-const enumPositionMap = new Map();
+const enumPositionMap: Map<string, string> = new Map();
 
 for (const value of Object.values(PositionTypeEnum)) {
   enumPositionMap.set(getNormalizedEnumValue(value), value.normalize());
