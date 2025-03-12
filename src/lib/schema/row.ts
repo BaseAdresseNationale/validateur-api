@@ -115,22 +115,25 @@ function validateBanIds(
   row: ValidateRowType,
   { addError }: { addError: (code: string) => void },
 ) {
-  // Si au moins un des ID est présent, cela signifie que l'adresse BAL utilise BanID
-  if (
+  const idBanCommune =
     row.parsedValues.id_ban_commune ||
+    row.additionalValues?.uid_adresse?.idBanCommune;
+  const idBanToponyme =
     row.parsedValues.id_ban_toponyme ||
-    row.parsedValues.id_ban_adresse
-  ) {
-    if (!row.parsedValues.id_ban_commune) {
+    row.additionalValues?.uid_adresse?.idBanToponyme;
+  const idBanAdresse =
+    row.parsedValues.id_ban_adresse ||
+    row.additionalValues?.uid_adresse?.idBanAdresse;
+
+  // Si au moins un des ID est présent, cela signifie que l'adresse BAL utilise BanID
+  if (idBanCommune || idBanToponyme || idBanAdresse) {
+    if (!idBanCommune) {
       addError('incoherence_id_ban');
     }
-    if (!row.parsedValues.id_ban_toponyme) {
+    if (!idBanToponyme) {
       addError('incoherence_id_ban');
     }
-    if (
-      !row.parsedValues.id_ban_adresse &&
-      row.parsedValues.numero !== 99_999
-    ) {
+    if (!idBanAdresse && row.parsedValues.numero !== 99_999) {
       addError('adresses_required_id_ban');
     }
   }

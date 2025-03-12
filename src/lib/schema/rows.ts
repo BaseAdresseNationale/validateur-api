@@ -1,34 +1,44 @@
-import { IS_TOPO_NB } from '../validate/validate.type';
+import { IS_TOPO_NB, ValidateRowType } from '../validate/validate.type';
 
 function validateRowsEmpty(
-  parsedRows: Record<string, string>[],
+  rows: ValidateRowType[],
   { addError }: { addError: (code: string) => void },
 ) {
   // VERIFIE QUE LE FICHIER N'EST PAS VIDE
-  if (parsedRows.length <= 0) {
+  if (rows.length <= 0) {
     addError('rows.empty');
   }
 }
 
 function validateUseBanIds(
-  parsedRows: Record<string, string>[],
+  rows: ValidateRowType[],
   { addError }: { addError: (code: string) => void },
 ) {
   const districtIDs = new Set();
   let balAdresseUseBanId = 0;
-  for (const r of parsedRows) {
-    const { id_ban_commune, id_ban_toponyme, id_ban_adresse, numero } = r;
+  for (const row of rows) {
+    const idBanCommune =
+      row.parsedValues.id_ban_commune ||
+      row.additionalValues?.uid_adresse?.idBanCommune;
+    const idBanToponyme =
+      row.parsedValues.id_ban_toponyme ||
+      row.additionalValues?.uid_adresse?.idBanToponyme;
+    const idBanAdresse =
+      row.parsedValues.id_ban_adresse ||
+      row.additionalValues?.uid_adresse?.idBanAdresse;
+    const numero = row.parsedValues.numero;
+
     if (
-      id_ban_commune &&
-      id_ban_toponyme &&
-      ((!id_ban_adresse && numero === IS_TOPO_NB) || id_ban_adresse)
+      idBanCommune &&
+      idBanToponyme &&
+      ((!idBanAdresse && numero === IS_TOPO_NB) || idBanAdresse)
     ) {
       balAdresseUseBanId++;
-      districtIDs.add(id_ban_commune);
+      districtIDs.add(idBanCommune);
     }
   }
 
-  if (balAdresseUseBanId === parsedRows.length) {
+  if (balAdresseUseBanId === rows.length) {
     // Check district IDs consistency
     if (districtIDs.size > 1) {
       addError('rows.multi_id_ban_commune');
@@ -45,11 +55,11 @@ function validateUseBanIds(
 }
 
 function validateRows(
-  parsedRows: Record<string, string>[],
+  rows: ValidateRowType[],
   { addError }: { addError: (code: string) => void },
 ) {
-  validateRowsEmpty(parsedRows, { addError });
-  validateUseBanIds(parsedRows, { addError });
+  validateRowsEmpty(rows, { addError });
+  validateUseBanIds(rows, { addError });
 }
 
 export default validateRows;

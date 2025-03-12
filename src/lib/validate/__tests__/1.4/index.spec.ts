@@ -282,6 +282,7 @@ describe('VALIDATE 1.4 TEST', () => {
     const report = (await validate(buffer, {
       profile: '1.4',
     })) as ValidateProfileType;
+
     expect(report.encoding).toBe('utf-8');
     expect(report.parseOk).toBe(true);
     expect(report.profilesValidation['1.4'].isValid).toBe(false);
@@ -289,6 +290,24 @@ describe('VALIDATE 1.4 TEST', () => {
 
     const error = report.profilErrors.filter(
       (e) => e.code === 'uid_adresse.type_invalide',
+    );
+    expect(error.length).toBe(1);
+    expect(error[0].level).toBe('E');
+  });
+
+  test('Error uid_adresse incoherence_id_ban', async () => {
+    const buffer = await readAsBuffer('1.3-incoherent-uid_adresse.csv');
+    const report = (await validate(buffer, {
+      profile: '1.4',
+    })) as ValidateProfileType;
+
+    expect(report.encoding).toBe('utf-8');
+    expect(report.parseOk).toBe(true);
+    expect(report.profilesValidation['1.4'].isValid).toBe(false);
+    expect(report.profilesValidation['1.4-relax'].isValid).toBe(true);
+
+    const error = report.profilErrors.filter(
+      (e) => e.code === 'row.incoherence_id_ban',
     );
     expect(error.length).toBe(1);
     expect(error[0].level).toBe('E');
