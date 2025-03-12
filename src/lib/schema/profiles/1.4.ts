@@ -7,8 +7,8 @@ const errors: string[] = [
   'id_ban_commune.type_invalide',
   'id_ban_toponyme.type_invalide',
   'id_ban_adresse.type_invalide',
-  'row.incoherence_ids_ban',
-  'row.id_ban_adresses_required',
+  'row.incoherence_id_ban',
+  'row.adresses_required_id_ban',
   'rows.ids_required_every',
 ];
 
