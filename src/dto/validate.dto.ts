@@ -5,7 +5,7 @@ import {
   ParseFileType,
   ProfileErrorType,
   ProfilesValidationType,
-  ValidateFile,
+  ValidateFileType,
   ValidateRowType,
 } from '@ban-team/validateur-bal';
 import { ApiProperty, getSchemaPath, IntersectionType } from '@nestjs/swagger';
@@ -47,7 +47,7 @@ export class ValidateRowDTO implements ValidateRowType {
   localizedValues: Record<string, any>;
 
   @ApiProperty()
-  errors?: {
+  errors: {
     code: string;
     schemaName?: string;
     level?: ErrorLevelEnum;
@@ -57,10 +57,10 @@ export class ValidateRowDTO implements ValidateRowType {
   isValid?: boolean;
 
   @ApiProperty()
-  line?: number;
+  line: number;
 }
 
-export class ValidateFileDTO implements ValidateFile {
+export class ValidateFileDTO implements ValidateFileType {
   @ApiProperty()
   encoding: {
     value: string;
@@ -111,7 +111,7 @@ export class ParseFileDTO implements ParseFileType {
   parseErrors: ParseError[];
 
   @ApiProperty()
-  parsedRows?: Record<string, string>[];
+  parsedRows: Record<string, string>[];
 }
 
 export class PostParseDTO {
