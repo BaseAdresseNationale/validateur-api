@@ -42,7 +42,7 @@ export class AppController {
   @ApiResponse({ status: HttpStatus.OK, type: ValidateProfileDTO })
   async validateFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() { profile, withRowsParsed }: FileUploadDTO,
+    @Body() { profile, withRows }: FileUploadDTO,
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
@@ -51,6 +51,6 @@ export class AppController {
 
     res
       .status(HttpStatus.OK)
-      .json(withRowsParsed === 'true' ? report : omit(report, 'rows'));
+      .json(withRows === 'true' ? report : omit(report, 'rows'));
   }
 }
