@@ -1,12 +1,13 @@
 import {
   ErrorLevelEnum,
   FieldType,
-  NotFoundFieldType,
+  NotFoundFieldLevelType,
+  ParsedValues,
   ParseFileType,
   ProfileErrorType,
   ProfilesValidationType,
   ValidateFileType,
-  ValidateRowType,
+  ValidateRowFullType,
 } from '@ban-team/validateur-bal';
 import { ApiProperty, getSchemaPath, IntersectionType } from '@nestjs/swagger';
 import { ParseError } from 'papaparse';
@@ -25,20 +26,20 @@ export class FieldDTO implements FieldType {
   locale?: string;
 }
 
-export class NotFoundFieldDTO implements NotFoundFieldType {
+export class NotFoundFieldDTO implements NotFoundFieldLevelType {
   @ApiProperty()
   schemaName: string;
 
   @ApiProperty()
-  level?: string;
+  level?: ErrorLevelEnum;
 }
 
-export class ValidateRowDTO implements ValidateRowType {
+export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   rawValues: Record<string, string>;
 
   @ApiProperty()
-  parsedValues: Record<string, string | string[] | boolean | number>;
+  parsedValues: ParsedValues;
 
   @ApiProperty()
   additionalValues: Record<string, any>;
@@ -54,7 +55,7 @@ export class ValidateRowDTO implements ValidateRowType {
   }[];
 
   @ApiProperty()
-  isValid?: boolean;
+  isValid: boolean;
 
   @ApiProperty()
   line: number;

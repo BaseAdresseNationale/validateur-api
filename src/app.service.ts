@@ -1,8 +1,7 @@
 import {
   ParseFileType,
-  PrevalidateType,
   validate,
-  ValidateProfileType,
+  ValidateType,
 } from '@ban-team/validateur-bal';
 import { Injectable } from '@nestjs/common';
 
@@ -11,7 +10,7 @@ export class AppService {
   async validateFile(
     file: Buffer,
     profile: string,
-  ): Promise<ParseFileType | PrevalidateType | ValidateProfileType> {
+  ): Promise<ParseFileType | ValidateType> {
     return await validate(file, { profile });
   }
 }

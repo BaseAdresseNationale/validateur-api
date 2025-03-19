@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 import { join } from 'path';
 import {
-  ValidateProfileType,
+  ValidateType,
   validate,
   getErrorLevel,
   ErrorLevelEnum,
@@ -34,16 +34,14 @@ type RevisionError = {
 
 let organizations: OrganizationMoissoneurType[];
 
-async function getReportevision(
-  revisionId?: string,
-): Promise<ValidateProfileType> {
+async function getReportevision(revisionId?: string): Promise<ValidateType> {
   const response = await fetch(
     `${process.env.API_DEPOT_URL}/revisions/${revisionId}/files/bal/download`,
   );
   const file = Buffer.from(await response.arrayBuffer());
-  const report: ValidateProfileType = (await validate(file, {
+  const report: ValidateType = (await validate(file, {
     profile: profileBase,
-  })) as ValidateProfileType;
+  })) as ValidateType;
   return report;
 }
 
@@ -75,7 +73,7 @@ async function validateFileWithProfiles(
   recordsByProfile: Record<string, RevisionError[]>,
   revision: Revision,
 ) {
-  const { profilesValidation, uniqueErrors }: ValidateProfileType =
+  const { profilesValidation, uniqueErrors }: ValidateType =
     await getReportevision(revision.id);
 
   for (const profile of profilesTest) {

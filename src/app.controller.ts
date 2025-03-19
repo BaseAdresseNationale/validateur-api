@@ -9,11 +9,7 @@ import {
 } from '@nestjs/common';
 import { omit } from 'lodash';
 import { Response } from 'express';
-import {
-  ParseFileType,
-  PrevalidateType,
-  ValidateProfileType,
-} from '@ban-team/validateur-bal';
+import { ParseFileType, ValidateType } from '@ban-team/validateur-bal';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import {
@@ -46,7 +42,7 @@ export class AppController {
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
-    const report: ParseFileType | PrevalidateType | ValidateProfileType =
+    const report: ParseFileType | ValidateType =
       await this.appService.validateFile(fileBuffer, profile || '1.3-relax');
 
     res
