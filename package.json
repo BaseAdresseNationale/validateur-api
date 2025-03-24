@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ban-team/validateur-bal": "https://github.com/BaseAdresseNationale/validateur-bal.git#fufeck_feat_add_errors_ban_id",
+    "@ban-team/validateur-bal": "^3.0.7",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",

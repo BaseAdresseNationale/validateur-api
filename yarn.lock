@@ -338,9 +338,10 @@
   resolved "https://registry.yarnpkg.com/@ban-team/shared-data/-/shared-data-1.4.1.tgz#befd80777dd8a5f80262d65730f92c3a1c8a0116"
   integrity sha512-dcbwb+6xUE3O/5e7Gz5XrMw6rkI7XvTAXqfSzpFPkf5yteuy8nkLZc8EK4hX3G2nSvOx/hh8mVVCpo+OAZuOwA==
 
-"@ban-team/validateur-bal@https://github.com/BaseAdresseNationale/validateur-bal.git#fufeck_feat_add_errors_ban_id":
-  version "3.0.6"
-  resolved "https://github.com/BaseAdresseNationale/validateur-bal.git#5f77610ba7bf23cafae4bd19794d8685e7c30945"
+"@ban-team/validateur-bal@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@ban-team/validateur-bal/-/validateur-bal-3.0.7.tgz#056f493cebf13f5b4c580e0c9735ca56868c5b1f"
+  integrity sha512-of1dJEzjPZzuog5QSC3PH2c96B07jL7iqfdAruFRO8+DQVETkE1j8lITc6OX/mh17dCjTZFmRS3+n29yVX+XbA==
   dependencies:
     "@ban-team/shared-data" "^1.4.1"
     "@etalab/project-legal" "^0.6.0"
