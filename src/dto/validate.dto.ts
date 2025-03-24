@@ -30,7 +30,7 @@ export class NotFoundFieldDTO implements NotFoundFieldLevelType {
   @ApiProperty()
   schemaName: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: ErrorLevelEnum })
   level?: ErrorLevelEnum;
 }
 
@@ -92,6 +92,36 @@ export class ProfilesValidationDTO implements ProfilesValidationType {
   isValid: boolean;
 }
 
+export class ParseErrorDTO implements ParseError {
+  @ApiProperty({ enum: ['Quotes', 'Delimiter', 'FieldMismatch'] })
+  type: 'Quotes' | 'Delimiter' | 'FieldMismatch';
+
+  @ApiProperty({
+    enum: [
+      'MissingQuotes',
+      'UndetectableDelimiter',
+      'TooFewFields',
+      'TooManyFields',
+      'InvalidQuotes',
+    ],
+  })
+  code:
+    | 'MissingQuotes'
+    | 'UndetectableDelimiter'
+    | 'TooFewFields'
+    | 'TooManyFields'
+    | 'InvalidQuotes';
+
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  row?: number;
+
+  @ApiProperty()
+  index?: number;
+}
+
 export class ParseFileDTO implements ParseFileType {
   @ApiProperty()
   encoding: string;
@@ -108,8 +138,8 @@ export class ParseFileDTO implements ParseFileType {
   @ApiProperty()
   parseOk: boolean;
 
-  @ApiProperty()
-  parseErrors: ParseError[];
+  @ApiProperty({ type: () => ParseErrorDTO, isArray: true })
+  parseErrors: ParseErrorDTO[];
 
   @ApiProperty()
   parsedRows: Record<string, string>[];
@@ -166,5 +196,5 @@ export class PrevalidateDTO extends IntersectionType(
 
 export class ValidateProfileDTO extends IntersectionType(
   PrevalidateDTO,
-  ProfileErrorDTO,
+  ProfileErrorsDTO,
 ) {}

@@ -16,6 +16,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiExtraModels,
+  ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -35,6 +36,10 @@ export class AppController {
   @ApiBody({
     type: FileUploadDTO,
   })
+  @ApiOperation({
+    summary: 'Validate File',
+    operationId: 'validateFile',
+  })
   @ApiResponse({ status: HttpStatus.OK, type: ValidateProfileDTO })
   async validateFile(
     @UploadedFile() file: Express.Multer.File,
@@ -47,6 +52,6 @@ export class AppController {
 
     res
       .status(HttpStatus.OK)
-      .json(withRows === 'true' ? report : omit(report, 'rows'));
+      .json(withRows === 'false' ? omit(report, 'rows') : report);
   }
 }
