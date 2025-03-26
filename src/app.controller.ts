@@ -7,14 +7,16 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { omit } from 'lodash';
 import { Response } from 'express';
-import { PrevalidateType, ValidateProfile } from '@ban-team/validateur-bal';
+import { ParseFileType, ValidateType } from '@ban-team/validateur-bal';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AppService } from './app.service';
 import {
   ApiBody,
   ApiConsumes,
   ApiExtraModels,
+  ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -34,16 +36,22 @@ export class AppController {
   @ApiBody({
     type: FileUploadDTO,
   })
+  @ApiOperation({
+    summary: 'Validate File',
+    operationId: 'validateFile',
+  })
   @ApiResponse({ status: HttpStatus.OK, type: ValidateProfileDTO })
   async validateFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() { profile }: FileUploadDTO,
+    @Body() { profile, withRows }: FileUploadDTO,
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
-    const report: PrevalidateType | ValidateProfile =
+    const report: ParseFileType | ValidateType =
       await this.appService.validateFile(fileBuffer, profile || '1.3-relax');
 
-    res.status(HttpStatus.OK).json(report);
+    res
+      .status(HttpStatus.OK)
+      .json(withRows === 'false' ? omit(report, 'rows') : report);
   }
 }

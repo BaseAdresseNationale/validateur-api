@@ -1,12 +1,13 @@
 import {
   ErrorLevelEnum,
   FieldType,
-  NotFoundFieldType,
+  NotFoundFieldLevelType,
+  ParsedValues,
   ParseFileType,
   ProfileErrorType,
   ProfilesValidationType,
-  ValidateFile,
-  ValidateRowType,
+  ValidateFileType,
+  ValidateRowFullType,
 } from '@ban-team/validateur-bal';
 import { ApiProperty, getSchemaPath, IntersectionType } from '@nestjs/swagger';
 import { ParseError } from 'papaparse';
@@ -25,20 +26,20 @@ export class FieldDTO implements FieldType {
   locale?: string;
 }
 
-export class NotFoundFieldDTO implements NotFoundFieldType {
+export class NotFoundFieldDTO implements NotFoundFieldLevelType {
   @ApiProperty()
   schemaName: string;
 
-  @ApiProperty()
-  level?: string;
+  @ApiProperty({ enum: ErrorLevelEnum })
+  level?: ErrorLevelEnum;
 }
 
-export class ValidateRowDTO implements ValidateRowType {
+export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   rawValues: Record<string, string>;
 
   @ApiProperty()
-  parsedValues: Record<string, string | string[] | boolean | number>;
+  parsedValues: ParsedValues;
 
   @ApiProperty()
   additionalValues: Record<string, any>;
@@ -47,20 +48,20 @@ export class ValidateRowDTO implements ValidateRowType {
   localizedValues: Record<string, any>;
 
   @ApiProperty()
-  errors?: {
+  errors: {
     code: string;
     schemaName?: string;
     level?: ErrorLevelEnum;
   }[];
 
   @ApiProperty()
-  isValid?: boolean;
+  isValid: boolean;
 
   @ApiProperty()
-  line?: number;
+  line: number;
 }
 
-export class ValidateFileDTO implements ValidateFile {
+export class ValidateFileDTO implements ValidateFileType {
   @ApiProperty()
   encoding: {
     value: string;
@@ -91,6 +92,36 @@ export class ProfilesValidationDTO implements ProfilesValidationType {
   isValid: boolean;
 }
 
+export class ParseErrorDTO implements ParseError {
+  @ApiProperty({ enum: ['Quotes', 'Delimiter', 'FieldMismatch'] })
+  type: 'Quotes' | 'Delimiter' | 'FieldMismatch';
+
+  @ApiProperty({
+    enum: [
+      'MissingQuotes',
+      'UndetectableDelimiter',
+      'TooFewFields',
+      'TooManyFields',
+      'InvalidQuotes',
+    ],
+  })
+  code:
+    | 'MissingQuotes'
+    | 'UndetectableDelimiter'
+    | 'TooFewFields'
+    | 'TooManyFields'
+    | 'InvalidQuotes';
+
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  row?: number;
+
+  @ApiProperty()
+  index?: number;
+}
+
 export class ParseFileDTO implements ParseFileType {
   @ApiProperty()
   encoding: string;
@@ -107,11 +138,11 @@ export class ParseFileDTO implements ParseFileType {
   @ApiProperty()
   parseOk: boolean;
 
-  @ApiProperty()
-  parseErrors: ParseError[];
+  @ApiProperty({ type: () => ParseErrorDTO, isArray: true })
+  parseErrors: ParseErrorDTO[];
 
   @ApiProperty()
-  parsedRows?: Record<string, string>[];
+  parsedRows: Record<string, string>[];
 }
 
 export class PostParseDTO {
@@ -165,5 +196,5 @@ export class PrevalidateDTO extends IntersectionType(
 
 export class ValidateProfileDTO extends IntersectionType(
   PrevalidateDTO,
-  ProfileErrorDTO,
+  ProfileErrorsDTO,
 ) {}
