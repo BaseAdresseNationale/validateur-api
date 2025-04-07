@@ -25,12 +25,12 @@ import { FileUploadDTO } from './dto/file.dto';
 import * as multer from 'multer';
 
 @ApiTags('validate')
-@Controller('validate')
+@Controller()
 @ApiExtraModels(ProfilesValidationDTO)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('file')
+  @Post('validate/file')
   @UseInterceptors(FileInterceptor('file', { storage: multer.memoryStorage() }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -53,5 +53,28 @@ export class AppController {
     res
       .status(HttpStatus.OK)
       .json(withRows === 'false' ? omit(report, 'rows') : report);
+  }
+
+  @Post('autofix/file')
+  @UseInterceptors(FileInterceptor('file', { storage: multer.memoryStorage() }))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FileUploadDTO,
+  })
+  @ApiOperation({
+    summary: 'AutoFix File',
+    operationId: 'autoFix',
+  })
+  async autofixFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const fileBuffer: Buffer = file.buffer;
+    const fileAutoFix: Buffer = await this.appService.autofixFile(fileBuffer);
+
+    res
+      .attachment(`bal-autofix.csv`)
+      .setHeader('Content-Type', 'text/csv')
+      .send(fileAutoFix);
   }
 }

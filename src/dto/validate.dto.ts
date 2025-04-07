@@ -42,6 +42,9 @@ export class ValidateRowDTO implements ValidateRowFullType {
   parsedValues: ParsedValues;
 
   @ApiProperty()
+  remediations: ParsedValues;
+
+  @ApiProperty()
   additionalValues: Record<string, any>;
 
   @ApiProperty()
