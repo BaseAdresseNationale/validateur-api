@@ -1,5 +1,6 @@
 import {
   ErrorLevelEnum,
+  ErrorLevelType,
   FieldType,
   NotFoundFieldLevelType,
   ParsedValues,
@@ -34,6 +35,17 @@ export class NotFoundFieldDTO implements NotFoundFieldLevelType {
   level?: ErrorLevelEnum;
 }
 
+export class ErrorLevelDTO implements ErrorLevelType {
+  @ApiProperty()
+  code: string;
+
+  @ApiProperty()
+  schemaName?: string;
+
+  @ApiProperty({ enum: ErrorLevelEnum })
+  level?: ErrorLevelEnum;
+}
+
 export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   rawValues: Record<string, string>;
@@ -47,12 +59,8 @@ export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   localizedValues: Record<string, any>;
 
-  @ApiProperty()
-  errors: {
-    code: string;
-    schemaName?: string;
-    level?: ErrorLevelEnum;
-  }[];
+  @ApiProperty({ type: () => ErrorLevelDTO, isArray: true })
+  errors: ErrorLevelDTO[];
 
   @ApiProperty()
   isValid: boolean;
