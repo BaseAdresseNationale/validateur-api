@@ -340,7 +340,7 @@
 
 "@ban-team/validateur-bal@https://github.com/BaseAdresseNationale/validateur-bal.git#fufeck_feat_add-remediation-ban-ids":
   version "3.0.7"
-  resolved "https://github.com/BaseAdresseNationale/validateur-bal.git#bdb148aa75d6407f3bac469c5bb5621635aee847"
+  resolved "https://github.com/BaseAdresseNationale/validateur-bal.git#bf893f6c465eb85723a987c68ad818a234bfa245"
   dependencies:
     "@ban-team/shared-data" "^1.4.1"
     "@etalab/project-legal" "^0.6.0"
