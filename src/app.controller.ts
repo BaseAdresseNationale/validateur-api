@@ -21,20 +21,20 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProfilesValidationDTO, ValidateProfileDTO } from './dto/validate.dto';
-import { FileUploadDTO } from './dto/file.dto';
+import { ValidateFileDTO, AutofixFileDTO } from './dto/file.dto';
 import * as multer from 'multer';
 
 @ApiTags('validate')
-@Controller('validate')
+@Controller()
 @ApiExtraModels(ProfilesValidationDTO)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('file')
+  @Post('validate/file')
   @UseInterceptors(FileInterceptor('file', { storage: multer.memoryStorage() }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: FileUploadDTO,
+    type: ValidateFileDTO,
   })
   @ApiOperation({
     summary: 'Validate File',
@@ -43,7 +43,7 @@ export class AppController {
   @ApiResponse({ status: HttpStatus.OK, type: ValidateProfileDTO })
   async validateFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() { profile, withRows }: FileUploadDTO,
+    @Body() { profile, withRows }: ValidateFileDTO,
     @Res() res: Response,
   ) {
     const fileBuffer: Buffer = file.buffer;
@@ -53,5 +53,28 @@ export class AppController {
     res
       .status(HttpStatus.OK)
       .json(withRows === 'false' ? omit(report, 'rows') : report);
+  }
+
+  @Post('autofix/file')
+  @UseInterceptors(FileInterceptor('file', { storage: multer.memoryStorage() }))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: AutofixFileDTO,
+  })
+  @ApiOperation({
+    summary: 'AutoFix File',
+    operationId: 'autoFix',
+  })
+  async autofixFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const fileBuffer: Buffer = file.buffer;
+    const fileAutoFix: Buffer = await this.appService.autofixFile(fileBuffer);
+
+    res
+      .attachment(`bal-autofix.csv`)
+      .setHeader('Content-Type', 'text/csv')
+      .send(fileAutoFix);
   }
 }

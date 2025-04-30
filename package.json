@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ban-team/validateur-bal": "^3.0.7",
+    "@ban-team/validateur-bal": "3.1.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
@@ -54,7 +54,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.29.1"
   },
   "jest": {
     "moduleFileExtensions": [

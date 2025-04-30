@@ -2,6 +2,7 @@ import {
   ParseFileType,
   validate,
   ValidateType,
+  autofix,
 } from '@ban-team/validateur-bal';
 import { Injectable } from '@nestjs/common';
 
@@ -12,5 +13,9 @@ export class AppService {
     profile: string,
   ): Promise<ParseFileType | ValidateType> {
     return await validate(file, { profile });
+  }
+
+  async autofixFile(file: Buffer): Promise<Buffer> {
+    return await autofix(file);
   }
 }
