@@ -30,6 +30,7 @@ type RevisionError = {
   bal_id?: string;
   source_nom?: string;
   organization_nom?: string;
+  date?: string;
 };
 
 let organizations: OrganizationMoissoneurType[];
@@ -62,6 +63,7 @@ async function writeInCsv(recordsByProfile: Record<string, RevisionError[]>) {
         { id: 'bal_id', title: 'bal_id' },
         { id: 'source_nom', title: 'source_id' },
         { id: 'organization_nom', title: 'organization_id' },
+        { id: 'date', title: 'date' },
       ],
     });
     await csvWriter.writeRecords(recordsByProfile[profile]); // returns a promise
@@ -123,6 +125,7 @@ async function validateFileWithProfiles(
         bal_id,
         source_nom,
         organization_nom,
+        date: (revision.publishedAt as unknown as string)?.split('T')[0],
       });
     }
   }
