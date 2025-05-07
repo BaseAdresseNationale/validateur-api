@@ -1,0 +1,46 @@
+# Règles pour l'assistance Cursor sur le projet validateur-api
+
+# Structure du projet
+
+- Le projet est une API NestJS avec une architecture modulaire
+- Le projet utilise une architecture par features
+- Les modules, contrôleurs, services et entités se trouvent dans le dossier de leur feature dans src/
+- Le dossier dto/ contient les objets de transfert de données
+- Les tests sont organisés dans des fichiers .spec.ts à côté des fichiers qu'ils testent
+
+# Conventions de code
+
+- Utilisation de TypeScript strict
+- Architecture RESTful
+- Tests unitaires avec Jest
+- Documentation avec Swagger
+- Utilisation de Winston pour la gestion des logs
+
+# Points d'attention
+
+- Respecter les conventions de nommage NestJS
+- Maintenir la cohérence des types TypeScript
+- Suivre les principes SOLID
+- Utiliser les DTOs pour la validation des données
+
+# Fichiers importants
+
+- nest-cli.json : Configuration du projet NestJS
+- package.json : Dépendances et scripts
+- tsconfig.json : Configuration TypeScript
+- tsconfig.build.json : Configuration de build TypeScript
+
+# Bonnes pratiques
+
+- Toujours documenter les endpoints avec des décorateurs Swagger
+- Écrire des tests unitaires pour les nouvelles fonctionnalités
+- Utiliser les DTOs pour la validation des données
+- Implémenter la gestion des erreurs de manière cohérente
+- Suivre les principes de clean code
+
+# Points de vigilance
+
+- Vérifier la compatibilité des versions dans package.json
+- Maintenir la cohérence des types entre le frontend et le backend
+- Respecter les contraintes de sécurité (CORS, authentification, etc.)
+- Suivre les conventions de commit et de versioning 
