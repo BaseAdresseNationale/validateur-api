@@ -9,6 +9,8 @@ import {
   ValidateFileType,
   ValidateRowFullType,
 } from '@ban-team/validateur-bal';
+import { RemediationValue } from '@ban-team/validateur-bal/dist/schema/shema.type';
+import { RemediationsType } from '@ban-team/validateur-bal/dist/schema/shema.type';
 import { ApiProperty, getSchemaPath, IntersectionType } from '@nestjs/swagger';
 import { ParseError } from 'papaparse';
 
@@ -34,6 +36,34 @@ export class NotFoundFieldDTO implements NotFoundFieldLevelType {
   level?: ErrorLevelEnum;
 }
 
+export class RemediationValueDTO<T> implements RemediationValue<T> {
+  @ApiProperty()
+  errors: string[];
+
+  @ApiProperty()
+  value: T;
+}
+
+export class RemediationsDTO implements RemediationsType {
+  @ApiProperty({ type: () => RemediationValueDTO<string> })
+  id_ban_commune?: RemediationValueDTO<string>;
+
+  @ApiProperty({ type: () => RemediationValueDTO<string> })
+  id_ban_toponyme?: RemediationValueDTO<string>;
+
+  @ApiProperty({ type: () => RemediationValueDTO<string> })
+  id_ban_adresse?: RemediationValueDTO<string>;
+
+  @ApiProperty({ type: () => RemediationValueDTO<string> })
+  commune_insee?: RemediationValueDTO<string>;
+
+  @ApiProperty({ type: () => RemediationValueDTO<string> })
+  commune_nom?: RemediationValueDTO<string>;
+
+  @ApiProperty({ type: () => RemediationValueDTO<Date> })
+  date_der_maj?: RemediationValueDTO<Date>;
+}
+
 export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   rawValues: Record<string, string>;
@@ -41,8 +71,8 @@ export class ValidateRowDTO implements ValidateRowFullType {
   @ApiProperty()
   parsedValues: ParsedValues;
 
-  @ApiProperty()
-  remediations: ParsedValues;
+  @ApiProperty({ type: () => RemediationsDTO })
+  remediations: Record<string, RemediationsDTO>;
 
   @ApiProperty()
   additionalValues: Record<string, any>;
