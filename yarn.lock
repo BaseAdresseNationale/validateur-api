@@ -349,10 +349,10 @@
   resolved "https://registry.yarnpkg.com/@ban-team/shared-data/-/shared-data-1.4.1.tgz#befd80777dd8a5f80262d65730f92c3a1c8a0116"
   integrity sha512-dcbwb+6xUE3O/5e7Gz5XrMw6rkI7XvTAXqfSzpFPkf5yteuy8nkLZc8EK4hX3G2nSvOx/hh8mVVCpo+OAZuOwA==
 
-"@ban-team/validateur-bal@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@ban-team/validateur-bal/-/validateur-bal-3.1.0.tgz#d502885a9671efb6258ca8c36b233868cad6047f"
-  integrity sha512-XdaNnrcjMCcPmzztlADGWjKTXBYynvpdOVBdw9OuRAyoX/M4jo2OWw7YrnEpD10EeRMouwCOEujI09PT9hbGjw==
+"@ban-team/validateur-bal@3.1.10":
+  version "3.1.10"
+  resolved "https://registry.yarnpkg.com/@ban-team/validateur-bal/-/validateur-bal-3.1.10.tgz#33504ff88cec96734b1a419959a0c2e35a8565b7"
+  integrity sha512-Wq3ws1PRuzbbuHSDAtSDPs/4MS/pUSDh93dHbSYlR1LhuK9ZXdpohsh/NQpGVhOXXV2JW0R2UyAwLuWocRqMxw==
   dependencies:
     "@ban-team/adresses-util" "^0.9.0"
     "@ban-team/shared-data" "^1.4.1"
