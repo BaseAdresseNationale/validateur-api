@@ -13,6 +13,10 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('API validateur')
     .setDescription('API permettant de valider un fichier BAL')
+    .addServer(
+      process?.env?.API_VALIDATEUR_URL ??
+        'https://plateforme-bal.adresse.data.gouv.fr/validateur-api',
+    )
     .setVersion('1.0')
     .build();
 
