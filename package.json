@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@ban-team/validateur-bal": "3.3.2",
+    "@ban-team/validateur-bal": "3.3.3",
     "@nestjs/common": "^11.0.1",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
