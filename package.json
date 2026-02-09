@@ -10,6 +10,7 @@
     "start": "node dist/main.js",
     "dev": "nest start --watch",
     "revalidate-revision": "ts-node ./scripts/revalidate-revision/index.ts",
+    "mailing-commune": "ts-node ./scripts/mailing-commune/index.ts",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "jest"
@@ -22,8 +23,10 @@
     "@nestjs/swagger": "^11.0.6",
     "bluebird": "^3.7.2",
     "csv-writer": "^1.6.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^17.2.4",
+    "handlebars": "^4.7.8",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^8.0.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
@@ -39,6 +42,7 @@
     "@types/jest": "^29.5.14",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.7",
+    "@types/nodemailer": "^7.0.9",
     "@types/papaparse": "^5.3.15",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
