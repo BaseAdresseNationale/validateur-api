@@ -189,7 +189,9 @@ async function main() {
         const balFileUrl = `https://plateforme-bal.adresse.data.gouv.fr/api-depot/revisions/${result.revision_id}/files/bal/download`;
 
         const balBuffer = await downloadBalFile(balFileUrl);
-        console.log(`Fichier BAL telecharge pour la commune ${result.code_commune}`);
+        console.log(
+          `Fichier BAL telecharge pour la commune ${result.code_commune}`,
+        );
 
         const fixedBalBuffer = await autofix(balBuffer);
         if (!fixedBalBuffer) {
@@ -203,7 +205,7 @@ async function main() {
 
         // Valider le fichier corrigé pour vérifier si l'autofix a fonctionné
         const validationResult = await validate(fixedBalBuffer, {
-          profile: '1.3'
+          profile: '1.3',
         });
 
         if (validationResult.parseOk) {
@@ -284,6 +286,7 @@ async function main() {
       emailsSkipped++;
     }
     console.log('-------------------------------------------------------');
+    console.log('-                                                     -');
     console.log('-------------------------------------------------------');
   }
 
