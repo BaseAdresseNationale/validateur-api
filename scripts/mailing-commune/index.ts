@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import { join } from 'path';
 import * as Papa from 'papaparse';
-import { getLabel } from '@ban-team/validateur-bal';
+import { getLabel, autofix, validate } from '@ban-team/validateur-bal';
 import * as nodemailer from 'nodemailer';
 import * as Handlebars from 'handlebars';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: join(__dirname, '.env') });
+dotenv.config({ path: join(__dirname, '../../', '.env') });
 
 type CsvRow = {
   code_commune: string;
@@ -32,6 +32,20 @@ function validateEmail(email: string): boolean {
   const re =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[(?:\d{1,3}\.){3}\d{1,3}])|(([a-zA-Z\-\d]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
+}
+
+async function getCommuneName(codeCommune: string): Promise<string> {
+  try {
+    const url = `https://geo.api.gouv.fr/communes/${codeCommune}?fields=nom`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      return codeCommune;
+    }
+    const data: { nom?: string } = await response.json();
+    return data.nom || codeCommune;
+  } catch {
+    return codeCommune;
+  }
 }
 
 async function getMairies(codeCommune: string): Promise<Mairie[]> {
@@ -66,34 +80,24 @@ function createTransporter() {
   });
 }
 
-function loadEmailTemplate(): Handlebars.TemplateDelegate {
-  const templatePath = join(__dirname, 'templates/bal-error-notification.hbs');
+function loadEmailTemplate(templateName: string): Handlebars.TemplateDelegate {
+  const templatePath = join(__dirname, `templates/${templateName}.hbs`);
   const templateSource = fs.readFileSync(templatePath, 'utf-8');
   return Handlebars.compile(templateSource);
 }
 
 const API_URL = 'https://api-bal.adresse.data.gouv.fr';
 
-async function sendErrorEmail(
-  transporter: nodemailer.Transporter,
-  template: Handlebars.TemplateDelegate,
-  to: string[],
-  data: {
-    codeCommune: string;
-    errorLabels: { code: string; label: string }[];
-    balFileUrl: string;
-    apiUrl: string;
-  },
-) {
-  const html = template(data);
+async function downloadBalFile(balFileUrl: string): Promise<Buffer> {
+  const response = await fetch(balFileUrl);
+  if (!response.ok) {
+    throw new Error(
+      `Erreur lors du telechargement du fichier BAL: ${response.status} ${response.statusText}`,
+    );
+  }
 
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM,
-    to: to.join(', '),
-    bcc: process.env.SMTP_BCC || undefined,
-    subject: `Erreurs detectees sur la BAL de la commune ${data.codeCommune}`,
-    html,
-  });
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
 }
 
 async function getEmailsCommune(codeCommune: string): Promise<string[]> {
@@ -154,9 +158,10 @@ async function main() {
     skipEmptyLines: true,
   });
 
-  // Initialiser le transporteur SMTP et le template
+  // Initialiser le transporteur SMTP et les templates
   const transporter = createTransporter();
-  const template = loadEmailTemplate();
+  const autofixTemplate = loadEmailTemplate('bal-autofix-notification');
+  const manualFixTemplate = loadEmailTemplate('bal-manual-fix-notification');
 
   const results = await Promise.all(
     data.map(async (row) => {
@@ -175,21 +180,91 @@ async function main() {
   let emailsSkipped = 0;
 
   for (const result of results) {
-    if (result.error_labels.length > 0 && result.emails_mairie.length > 0) {
+    if (
+      result.error_labels.length > 0 &&
+      result.emails_mairie.length > 0 &&
+      result.client === 'Formulaire de publication'
+    ) {
       try {
         const balFileUrl = `https://plateforme-bal.adresse.data.gouv.fr/api-depot/revisions/${result.revision_id}/files/bal/download`;
 
-        await sendErrorEmail(transporter, template, result.emails_mairie, {
-          codeCommune: result.code_commune,
-          errorLabels: result.error_labels,
-          balFileUrl,
-          apiUrl: API_URL,
+        const balBuffer = await downloadBalFile(balFileUrl);
+        console.log(`Fichier BAL telecharge pour la commune ${result.code_commune}`);
+
+        const fixedBalBuffer = await autofix(balBuffer);
+        if (!fixedBalBuffer) {
+          console.error(
+            `Erreur lors de l'autofix pour la commune ${result.code_commune}: fichier non parsable`,
+          );
+          emailsSkipped++;
+          continue;
+        }
+        console.log(`Autofix applique pour la commune ${result.code_commune}`);
+
+        // Valider le fichier corrigé pour vérifier si l'autofix a fonctionné
+        const validationResult = await validate(fixedBalBuffer, {
+          profile: '1.3'
         });
 
-        console.log(
-          `Email envoye pour la commune ${result.code_commune} a ${result.emails_mairie.join(', ')}`,
-        );
-        emailsSent++;
+        if (validationResult.parseOk) {
+          console.log(
+            `Commune ${result.code_commune}: toutes les erreurs ont ete corrigees par l'autofix`,
+          );
+
+          // Récupérer le nom de la commune et envoyer l'email d'autofix
+          const communeName = await getCommuneName(result.code_commune);
+          const html = autofixTemplate({
+            codeCommune: result.code_commune,
+            communeName,
+            errorLabels: result.error_labels,
+            balFileUrl,
+            apiUrl: API_URL,
+          });
+
+          await transporter.sendMail({
+            from: process.env.SMTP_FROM,
+            to: result.emails_mairie.join(', '),
+            bcc: process.env.SMTP_BCC || undefined,
+            subject: `Votre BAL contient des erreurs - Commune de ${communeName}`,
+            html,
+          });
+
+          console.log(
+            `Email autofix envoye pour la commune ${result.code_commune} a ${result.emails_mairie.join(', ')}`,
+          );
+          emailsSent++;
+        } else {
+          const remainingErrors =
+            'uniqueErrors' in validationResult
+              ? validationResult.uniqueErrors
+              : [];
+          console.log(
+            `Commune ${result.code_commune}: ${remainingErrors.length} erreur(s) restante(s) apres autofix: ${remainingErrors.join(', ')}`,
+          );
+
+          // Récupérer le nom de la commune et envoyer l'email de correction manuelle
+          const communeName = await getCommuneName(result.code_commune);
+          const html = manualFixTemplate({
+            codeCommune: result.code_commune,
+            communeName,
+            errorLabels: result.error_labels,
+            balFileUrl,
+            apiUrl: API_URL,
+          });
+
+          await transporter.sendMail({
+            from: process.env.SMTP_FROM,
+            to: result.emails_mairie.join(', '),
+            bcc: process.env.SMTP_BCC || undefined,
+            subject: `Votre BAL contient des erreurs - Commune de ${communeName}`,
+            html,
+          });
+
+          console.log(
+            `Email correction manuelle envoye pour la commune ${result.code_commune} a ${result.emails_mairie.join(', ')}`,
+          );
+          emailsSent++;
+        }
       } catch (error) {
         console.error(
           `Erreur lors de l'envoi de l'email pour la commune ${result.code_commune}:`,
@@ -199,11 +274,17 @@ async function main() {
     } else {
       if (result.error_labels.length === 0) {
         console.log(`Commune ${result.code_commune}: aucune erreur`);
-      } else {
+      } else if (result.emails_mairie.length === 0) {
         console.log(`Commune ${result.code_commune}: pas d'email disponible`);
+      } else if (result.client !== 'Formulaire de publication') {
+        console.log(
+          `Commune ${result.code_commune}: client "${result.client}" ignore (seul "Formulaire de publication" est traite)`,
+        );
       }
       emailsSkipped++;
     }
+    console.log('-------------------------------------------------------');
+    console.log('-------------------------------------------------------');
   }
 
   console.log(
