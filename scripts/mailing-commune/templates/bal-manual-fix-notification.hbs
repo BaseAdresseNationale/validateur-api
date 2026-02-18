@@ -1,0 +1,175 @@
+<html lang='fr'>
+  <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <title>Votre Base Adresse Locale contient des erreurs</title>
+    <style>
+      body {
+        background-color: #f5f6f7;
+        color: #234361;
+        font-family:
+          'SF UI Text',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        margin: auto;
+        padding: 25px;
+      }
+      a {
+        text-decoration: none;
+      }
+      button {
+        background-color: #003b80;
+        border: none;
+        border-radius: 3px;
+        padding: 10px;
+        margin: 5px 0;
+      }
+      .container {
+        background-color: #ebeff3;
+        padding: 25px;
+      }
+      .forceWhiteLink button a {
+        color: #fff !important;
+      }
+      .title {
+        border-bottom: 1px solid #e4e7eb;
+        margin-top: 35px;
+        padding: 10px;
+        text-align: center;
+      }
+      .error-list {
+        background-color: #fff;
+        padding: 15px;
+        margin: 15px 0;
+        border-left: 4px solid #e74c3c;
+      }
+      .error-item {
+        margin: 8px 0;
+      }
+      .step {
+        background-color: #fff;
+        padding: 15px;
+        margin: 15px 0;
+        border-left: 4px solid #3498db;
+      }
+      .step-number {
+        display: inline-block;
+        background-color: #003b80;
+        color: #fff;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 24px;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+      .warning {
+        background-color: #fff3cd;
+        padding: 15px;
+        margin: 15px 0;
+        border-left: 4px solid #ffc107;
+      }
+      img {
+        max-height: 45px;
+        background-color: #f5f6f7;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <img
+        src='{{apiUrl}}/public/images/logo-adresse.png'
+        alt='Logo République Française'
+      />
+    </div>
+    <div class='title'>
+      <h2>Votre Base Adresse Locale contient des erreurs</h2>
+      <h3>Commune de {{communeName}} ({{codeCommune}})</h3>
+    </div>
+
+    <div class='container'>
+      <p>Nous avons détecté les erreurs suivantes sur votre fichier BAL :</p>
+
+      <div class='error-list'>
+        {{#each errorLabels}}
+          <div class='error-item'>
+            {{this.label}}
+          </div>
+        {{/each}}
+      </div>
+
+      <div class='warning'>
+        <p><b>Attention :</b>
+          Ces erreurs ne peuvent pas être corrigées automatiquement. Vous devez
+          les corriger manuellement dans votre fichier BAL.</p>
+      </div>
+
+      <p>Vous avez deux options :</p>
+
+      <h4>Option 1 : Utiliser Mes Adresses (recommandé)</h4>
+      <p>Vous pouvez créer ou récupérer votre BAL sur Mes Adresses, la corriger et la publier directement.</p>
+      <span class='forceWhiteLink'>
+        <button>
+          <a href='https://mes-adresses.data.gouv.fr/' target='blank'>Accéder à Mes Adresses</a>
+        </button>
+      </span>
+
+      <h4 style='margin-top: 25px;'>Option 2 : Corriger et republier via le formulaire de publication</h4>
+
+      <div class='step'>
+        <p><span class='step-number'>1</span><b>Téléchargez votre fichier BAL
+            actuel</b></p>
+        <span class='forceWhiteLink'>
+          <button>
+            <a href='{{balFileUrl}}' target='blank'>Télécharger le fichier BAL</a>
+          </button>
+        </span>
+      </div>
+
+      <div class='step'>
+        <p><span class='step-number'>2</span><b>Corrigez manuellement les
+            erreurs</b></p>
+        <p>Ouvrez votre fichier BAL avec un tableur (Excel, LibreOffice Calc,
+          etc.) et corrigez les erreurs listées ci-dessus.</p>
+      </div>
+
+      <div class='step'>
+        <p><span class='step-number'>3</span><b>Vérifiez que votre fichier est
+            conforme</b></p>
+        <p>Utilisez le validateur pour vous assurer que toutes les erreurs ont
+          été corrigées.</p>
+        <span class='forceWhiteLink'>
+          <button>
+            <a
+              href='https://adresse.data.gouv.fr/outils/validateur-bal'
+              target='blank'
+            >Accéder au validateur BAL</a>
+          </button>
+        </span>
+      </div>
+
+      <div class='step'>
+        <p><span class='step-number'>4</span><b>Republiez votre BAL</b></p>
+        <p>Une fois votre fichier corrigé et validé, republiez-le pour mettre à
+          jour la Base Adresse Nationale.</p>
+        <span class='forceWhiteLink'>
+          <button>
+            <a
+              href='https://adresse.data.gouv.fr/outils/formulaire-de-publication'
+              target='blank'
+            >Accéder au formulaire de publication</a>
+          </button>
+        </span>
+      </div>
+
+      <p style='margin-top: 25px;'><i>L'équipe adresse.data.gouv.fr</i></p>
+      <p>Si vous rencontrez un problème, contactez-nous sur <a href="mailto:adresse@data.gouv.fr">adresse@data.gouv.fr</a></p>
+    </div>
+  </body>
+</html>
