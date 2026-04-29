@@ -19,8 +19,8 @@ import {
 
 dotenv.config();
 
-const profileBase = '1.3-relax';
-const profilesTest = ['1.3-relax', '1.3', '1.4'];
+const profileBase = '1.3';
+const profilesTest = ['1.3', '1.4', '1.5'];
 
 type RevisionError = {
   code_commune?: string;
@@ -40,9 +40,7 @@ async function getReportRevision(revisionId?: string): Promise<ValidateType> {
     `${process.env.API_DEPOT_URL}/revisions/${revisionId}/files/bal/download`,
   );
   const file = Buffer.from(await response.arrayBuffer());
-  const report: ValidateType = (await validate(file, {
-    profile: profileBase,
-  })) as ValidateType;
+  const report: ValidateType = (await validate(file)) as ValidateType;
   return report;
 }
 
@@ -76,59 +74,57 @@ async function validateFileWithProfiles(
   revision: Revision,
 ) {
   try {
-    const { profilesValidation, uniqueErrors }: ValidateType =
+    const { profilesValidation, uniqueErrors, profile }: ValidateType =
       await getReportRevision(revision.id);
 
-    for (const profile of profilesTest) {
+    if (
+      profilesValidation &&
+      uniqueErrors &&
+      profilesValidation[profile].isValid === false
+    ) {
+      const erreurs: string = uniqueErrors
+        .filter((e) => getErrorLevel(profile, e) === ErrorLevelEnum.ERROR)
+        .join(',');
+
+      let bal_id = '';
+      let source_nom = '';
+      let organization_nom = '';
       if (
-        profilesValidation &&
-        uniqueErrors &&
-        profilesValidation[profile].isValid === false
+        'mes-adresses' === revision?.client?.legacyId ||
+        'moissonneur-bal' === revision?.client?.legacyId
       ) {
-        const erreurs: string = uniqueErrors
-          .filter((e) => getErrorLevel(profile, e) === ErrorLevelEnum.ERROR)
-          .join(',');
+        const { context }: Revision = (await fetch(
+          `${process.env.API_DEPOT_URL}/revisions/${revision.id}`,
+        ).then((res) => res.json())) as Revision;
 
-        let bal_id = '';
-        let source_nom = '';
-        let organization_nom = '';
-        if (
-          'mes-adresses' === revision?.client?.legacyId ||
-          'moissonneur-bal' === revision?.client?.legacyId
+        if ('mes-adresses' === revision?.client?.legacyId) {
+          bal_id = context?.extras?.balId;
+        } else if (
+          'moissonneur-bal' === revision?.client?.legacyId &&
+          context?.extras?.sourceId
         ) {
-          const { context }: Revision = (await fetch(
-            `${process.env.API_DEPOT_URL}/revisions/${revision.id}`,
-          ).then((res) => res.json())) as Revision;
+          const source: SourceMoissoneurType = (await fetch(
+            `${process.env.API_MOISSONNEUR_URL}/sources/${context?.extras?.sourceId}`,
+          ).then((res) => res.json())) as SourceMoissoneurType;
 
-          if ('mes-adresses' === revision?.client?.legacyId) {
-            bal_id = context?.extras?.balId;
-          } else if (
-            'moissonneur-bal' === revision?.client?.legacyId &&
-            context?.extras?.sourceId
-          ) {
-            const source: SourceMoissoneurType = (await fetch(
-              `${process.env.API_MOISSONNEUR_URL}/sources/${context?.extras?.sourceId}`,
-            ).then((res) => res.json())) as SourceMoissoneurType;
-
-            source_nom = source.title;
-            const organization = organizations.find(
-              ({ id }) => id === source.organizationId,
-            );
-            organization_nom = organization?.name || '';
-          }
+          source_nom = source.title;
+          const organization = organizations.find(
+            ({ id }) => id === source.organizationId,
+          );
+          organization_nom = organization?.name || '';
         }
-        // JSON
-        recordsByProfile[profile].push({
-          code_commune: revision.codeCommune,
-          revision_id: revision.id,
-          erreurs,
-          client_nom: revision?.client?.nom,
-          bal_id,
-          source_nom,
-          organization_nom,
-          date: (revision.publishedAt as unknown as string)?.split('T')[0],
-        });
       }
+      // JSON
+      recordsByProfile[profile].push({
+        code_commune: revision.codeCommune,
+        revision_id: revision.id,
+        erreurs,
+        client_nom: revision?.client?.nom,
+        bal_id,
+        source_nom,
+        organization_nom,
+        date: (revision.publishedAt as unknown as string)?.split('T')[0],
+      });
     }
   } catch (error) {
     console.error(error);
